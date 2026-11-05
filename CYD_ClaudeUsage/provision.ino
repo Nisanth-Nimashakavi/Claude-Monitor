@@ -242,24 +242,25 @@ document.getElementById('f').addEventListener('submit', async (e) => {
 </body>
 </html>)rawhtml";
 
-// ── Build <option> tags from a WiFi scan ──────────────
+// ── Build <option> tags from a WiFi scan (2.4 GHz only) ──────────────
+// The ESP32 radio can only join 2.4 GHz networks. WiFi.scanNetworks()
+// also returns 5 GHz APs on dual-band routers, which would fail to
+// connect. We use the reported channel to tell the bands apart:
+//   2.4 GHz  -> channels 1–14
+//   5 GHz    -> channels 36 and up
+// Anything above channel 14 is hidden from the dropdown.
 static String buildWifiOptions() {
     int n = WiFi.scanNetworks();
     if (n <= 0) return "<option disabled>No networks found</option>";
 
-    // Sort by RSSI descending (simple bubble sort — small n)
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (WiFi.RSSI(j) < WiFi.RSSI(j + 1)) {
-                // swap — unfortunately no direct swap API, rebuild manually later
-                // TFT_eSPI scan results are indexed; just sort indices
-            }
-        }
-    }
-
     String opts = "";
+    int shown = 0;
     for (int i = 0; i < n; i++) {
+        // Skip 5 GHz networks the ESP32 cannot join
+        if (WiFi.channel(i) > 14) continue;
+
         String ssid = WiFi.SSID(i);
+        if (ssid.isEmpty()) continue;   // skip hidden / blank SSIDs
         int    rssi = WiFi.RSSI(i);
         bool   enc  = (WiFi.encryptionType(i) != WIFI_AUTH_OPEN);
 
@@ -270,7 +271,7 @@ static String buildWifiOptions() {
         else if (rssi > -75) sig = "▂▄";
         else                 sig = "▂";
 
-        // Escape quotes in SSID for HTML attribute
+        // Escape for HTML attribute / text
         String safe = ssid;
         safe.replace("\"", "&quot;");
         safe.replace("<", "&lt;");
@@ -282,8 +283,12 @@ static String buildWifiOptions() {
         opts += sig;
         if (enc) opts += " 🔒";
         opts += "</option>\n";
+        shown++;
     }
     WiFi.scanDelete();
+
+    if (shown == 0)
+        return "<option disabled>No 2.4 GHz networks found</option>";
     return opts;
 }
 
