@@ -1,7 +1,7 @@
 # Claude Usage Monitor — CYD
 
-> **About this fork:** it adds **[v2](CYD_ClaudeUsage_v2/)**, a redesigned
-> interface for the same hardware. It has large anti-aliased text that's easy
+> **New: [v2](CYD_ClaudeUsage_v2/)** is a redesigned interface for the same
+> hardware. It has large anti-aliased text that's easy
 > to read from across a desk, four tap-to-switch pages, a clock with local
 > reset times, an "on pace / runs out in" projection, a settings page on your
 > network (`claude-monitor.local`) and night dimming. Upgrading from v1 keeps
