@@ -1,5 +1,18 @@
 # Claude Usage Monitor — CYD
 
+> **New: [v2](CYD_ClaudeUsage_v2/)** is a redesigned interface for the same
+> hardware. It has large anti-aliased text that's easy
+> to read from across a desk, four tap-to-switch pages, a clock with local
+> reset times, an "on pace / runs out in" projection, a settings page on your
+> network (`claude-monitor.local`) and night dimming. Upgrading from v1 keeps
+> your saved Wi-Fi and token. See the
+> [v2 README](CYD_ClaudeUsage_v2/README.md) for details and flashing steps.
+>
+> ![v2 screens](CYD_ClaudeUsage_v2/preview_v2.png)
+>
+> The original v1 sketch below is unchanged apart from one fix: the setup
+> page's Wi-Fi list now hides 5 GHz networks, which the ESP32 can't join.
+
 A standalone desk display that shows your Claude Code API usage in real time.
 Built for the **ESP32-2432S028R** ("Cheap Yellow Display") — a ~$18 all-in-one
 ESP32 board with a 2.8" touchscreen TFT. No laptop server, no extra hardware,
